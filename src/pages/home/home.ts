@@ -50,6 +50,7 @@ class BusRouteApp {
   private tripSelect!: HTMLSelectElement;
   private loadBtn!: HTMLButtonElement;
   private toggleGlobeBtn!: HTMLButtonElement;
+  private logoutBtn!: HTMLButtonElement; // <- Botão de logout adicionado
   private statusBadge!: HTMLDivElement;
 
   constructor() {
@@ -59,9 +60,11 @@ class BusRouteApp {
   private init(): void {
     if (!this.bindElements()) return;
     this.initMap();
+    this.checkAuthentication();
     this.createHoverTooltip();
     this.setupHoverEvent();
     this.attachEvents();
+    this.setupLogout(); // <- Inicializa o evento de logout
     this.loadAllRoutesOnStartup();
   }
 
@@ -70,6 +73,7 @@ class BusRouteApp {
     this.tripSelect = document.getElementById("select-trip") as HTMLSelectElement;
     this.loadBtn = document.getElementById("btn-load-routes") as HTMLButtonElement;
     this.toggleGlobeBtn = document.getElementById("btn-toggle-projection") as HTMLButtonElement;
+    this.logoutBtn = document.getElementById("btn-logout") as HTMLButtonElement; // <- Captura do elemento
     this.statusBadge = document.getElementById("status-message") as HTMLDivElement;
 
     const elements = [
@@ -77,6 +81,7 @@ class BusRouteApp {
       { name: "select-trip", el: this.tripSelect },
       { name: "btn-load-routes", el: this.loadBtn },
       { name: "btn-toggle-projection", el: this.toggleGlobeBtn },
+      { name: "btn-logout", el: this.logoutBtn }, // <- Incluído na validação
       { name: "status-message", el: this.statusBadge },
       { name: "map", el: document.getElementById("map") }
     ];
@@ -108,6 +113,51 @@ class BusRouteApp {
     if (this.viewer.cesiumWidget.creditContainer) {
       (this.viewer.cesiumWidget.creditContainer as HTMLElement).style.display = "none";
     }
+  }
+
+  private async checkAuthentication(): Promise<void> {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/routes`, {
+        method: "GET",
+        credentials: "include"
+      });
+      console.log(await response.json())
+      // Se a API retornar 401 (Não autorizado) ou 403, significa que o cookie expirou ou foi invalidado no logout
+      if (response.status === 401 || response.status === 403) {
+        this.forceClientLogout(); // Altere para a sua rota de login real
+      }
+    } catch (e) {
+      // Ignora erros de rede temporários para não quebrar o app offline se aplicável
+    }
+  }
+
+  private forceClientLogout(): void {
+    // Tenta expirar o cookie pelo lado do cliente também (caso o path permita)
+    document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href = "/login"; // Redireciona para a tela de login/home pública
+  }
+
+  private setupLogout(): void {
+    if (!this.logoutBtn) return;
+
+    this.logoutBtn.addEventListener("click", async () => {
+      this.updateStatus("Realizando logout...");
+      
+      try {
+        await fetch(`${this.apiBaseUrl}/logout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include"
+        });
+      } catch (err) {
+        console.warn("Erro na requisição de logout, forçando limpeza local.", err);
+      } finally {
+        // Sempre executa a limpeza local e redirecionamento, mesmo se falhar a rede
+        this.forceClientLogout();
+      }
+    });
   }
 
   private createHoverTooltip(): void {
@@ -271,7 +321,6 @@ class BusRouteApp {
     this.updateStatus("Inicializando mapa: Carregando rotas, viagens e traçados...");
 
     try {
-      // 1. Carrega as rotas
       const resRoutes = await fetch(`${this.apiBaseUrl}/routes`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -286,7 +335,6 @@ class BusRouteApp {
         return;
       }
 
-      // Configura cores únicas para cada rota
       const totalRoutes = routesList.length;
       routesList.forEach((r, index) => {
         this.routesMap.set(r.route_id, r);
@@ -302,7 +350,6 @@ class BusRouteApp {
 
       this.populateRoutesSelect(routesList);
 
-      // 2. Tenta carregar todas as trips de uma vez só (ou em lote seguro)
       try {
         const resTrips = await fetch(`${this.apiBaseUrl}/trips`, {
           method: "GET",
@@ -321,7 +368,6 @@ class BusRouteApp {
         console.warn("Endpoint /trips geral não disponível ou falhou, mapeando sob demanda.", e);
       }
 
-      // 3. Carrega os shapes geométricos
       const resShapes = await fetch(`${this.apiBaseUrl}/shapes`, {
         method: "GET",
         credentials: "include"
@@ -379,9 +425,7 @@ class BusRouteApp {
 
       const positions = Cesium.Cartesian3.fromDegreesArray(degreesArray);
 
-      // Recupera a rota vinculada ao shape
       const assignedRouteId = this.shapeToRouteMap.get(shapeId) || "";
-      // Se não encontrar a rota diretamente, tenta pegar do primeiro ponto se ele possuir route_id embutido
       const finalRouteId = assignedRouteId || (points[0] as any)?.route_id || "";
 
       const routeColor = this.routeColorMap.get(finalRouteId) || Cesium.Color.fromCssColorString("#a855f7");

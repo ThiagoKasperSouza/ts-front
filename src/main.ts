@@ -1,6 +1,7 @@
 import './style.css' // css geral
 import { getHomePage } from './pages/home/home.ts'
 import { getLoginPage } from './pages/login/login.ts'
+import { getRegisterPage } from './pages/register/register.ts'
 
 // 1. Define que cada rota deve ser uma função que retorna uma string HTML
 type PageRenderFn = () => string;
@@ -9,7 +10,7 @@ type PageRenderFn = () => string;
 const routes: Record<string, PageRenderFn> = {
   '/': getHomePage,
   '/login': getLoginPage,
-  '/register': getHomePage,
+  '/register': getRegisterPage,
 };
 
 // 3. Renderizador da página 404
