@@ -1,7 +1,6 @@
 import './style.css' // css geral
 import { getHomePage } from './pages/home/home.ts'
-
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = renderPage();
+import { getLoginPage } from './pages/login/login.ts'
 
 // 1. Define que cada rota deve ser uma função que retorna uma string HTML
 type PageRenderFn = () => string;
@@ -9,7 +8,7 @@ type PageRenderFn = () => string;
 // 2. Mapeamento das rotas (HashMap)
 const routes: Record<string, PageRenderFn> = {
   '/': getHomePage,
-  '/login': getHomePage,
+  '/login': getLoginPage,
   '/register': getHomePage,
 };
 
@@ -24,3 +23,5 @@ function renderPage(): string {
 
   return renderFn();
 }
+
+document.querySelector<HTMLDivElement>('#app')!.innerHTML = renderPage();

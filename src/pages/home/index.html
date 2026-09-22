@@ -1,8 +1,42 @@
 <main>
-    <div>
-        <h1>Page #1</h1>
-        <div>
-            <!--CONTEUDO-->
+    <header class="config-card">
+        <div class="config-row">
+        <button id="btn-load-routes" class="btn">Carregar Rotas</button>
+        <button id="btn-toggle-projection" class="btn">Mudar para Globo 3D 🌐</button>
+        </div>
+        <div id="status-message" class="status-badge">Aguardando inicialização...</div>
+    </header>
+
+    <!-- Seletores de Rota e Trip -->
+    <div class="selectors-bar">
+        <div class="select-group">
+        <label for="select-route">1. Selecione a Rota (/routes)</label>
+        <select id="select-route" disabled>
+            <option value="">Selecione uma rota...</option>
+        </select>
+        </div>
+
+        <div class="select-group">
+        <label for="select-trip">2. Selecione a Viagem (/trips)</label>
+        <select id="select-trip" disabled>
+            <option value="">Selecione uma viagem...</option>
+        </select>
         </div>
     </div>
+
+    <!-- Container do Mapa/Globo -->
+    <div id="map-container">
+        <div id="map" style="width: 100%; height: 520px;"></div>
+    </div>
+
+    <!-- Footer / Status Bar -->
+    <footer>
+      <div>
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Demo API Active</span>
+      </div>
+      <div>
+        <span>Engine: <strong>MapLibre GL JS</strong></span>
+      </div>
+    </footer>
 </main>

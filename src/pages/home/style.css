@@ -1,0 +1,279 @@
+header {
+      width: 100%;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      max-width: 600px;
+      margin: 0 auto 16px auto;
+      line-height: 1.4;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--accent-bg);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: var(--mono);
+    }
+
+    /* Main Grid Layout */
+    .viewer-layout {
+      display: grid;
+      grid-template-columns: 42em 1fr;
+      gap: 20px;
+      width: 100%;
+      flex: 1;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    @media (max-width: 850px) {
+      .viewer-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Control Panel Cards */
+    .panel {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-h);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, select, button {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-h);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-bg);
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--text-h);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary:hover {
+      background: var(--accent-bg);
+      border-color: var(--accent-border);
+    }
+
+    /* Toggle Switch */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--border);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Route/Trip Info Card */
+    .info-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .info-val {
+      font-family: var(--mono);
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    /* Map Container */
+    .map-wrapper {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Map Overlay Animation Controls */
+    .map-controls {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 10;
+      display: flex;
+      gap: 8px;
+      background: var(--bg);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    /* Status Bar */
+    footer {
+      width: 100%;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text);
+      box-sizing: border-box;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .status-dot.offline {
+      background: #f59e0b;
+    }
+
+    /* Animated Bus Icon Marker */
+    .bus-marker {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.1s linear;
+    }
+
+    /* MapLibre Popup Styling Overrides */
+    .maplibregl-popup-content {
+      background: var(--bg) !important;
+      color: var(--text-h) !important;
+      border: 1px solid var(--border);
+      border-radius: 8px !important;
+      box-shadow: var(--shadow) !important;
+      font-family: var(--sans);
+      padding: 12px !important;
+    }
+    .maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: var(--bg) !important; }
+    .maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: var(--bg) !important; }
+    .maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: var(--bg) !important; }
+    .maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: var(--bg) !important; }
